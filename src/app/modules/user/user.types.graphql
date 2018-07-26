@@ -1,0 +1,10 @@
+type Query {
+  users(team: String): [User]
+  devs: [User]
+}
+
+type User {
+  username: String
+  team: String 
+  role: [String]
+}

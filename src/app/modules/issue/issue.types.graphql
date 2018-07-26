@@ -1,0 +1,12 @@
+type Query {
+  issues: [Issue]
+}
+
+type Issue {
+  key: String
+  createdAt: String
+  startedAt: String
+  resolvedAt: String
+  storyPoints: Int
+  assignee: User
+}

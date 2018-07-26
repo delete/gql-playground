@@ -1,16 +1,15 @@
 import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
-import { graphqlExpress } from 'apollo-server-express';
+import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import { GraphQLModule, GraphQLFactory } from '@nestjs/graphql';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { BooksResolvers } from 'books.resolvers';
-import { BooksService } from 'books.service';
 import * as bodyParser from 'body-parser';
+import { UserModule, IssueModule } from './modules';
 
 @Module({
-  imports: [GraphQLModule],
-  controllers: [AppController],
-  providers: [AppService, BooksResolvers, BooksService],
+  imports: [
+    GraphQLModule,
+    UserModule,
+    IssueModule,
+  ],
 })
 export class AppModule implements NestModule {
   constructor(private readonly graphQLFactory: GraphQLFactory) {}
@@ -28,8 +27,11 @@ export class AppModule implements NestModule {
         next();
       })
       .forRoutes('/')
+      .apply(graphiqlExpress({ endpointURL: '/graphql' }))
+        .forRoutes('/graphiql')
       // @ts-ignore
       .apply(graphqlExpress(req => ({ schema, rootValue: req })))
       .forRoutes('/');
+
   }
 }
